@@ -1,6 +1,5 @@
-// app/campaign/result/page.js
+// File: ./app/campaign/result/page.js
 'use client';
-
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
@@ -13,10 +12,14 @@ import {
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+export const dynamic = 'force-dynamic';
+
 export default function Result() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const choice = searchParams.get('choice');
+
+  const colors = ['#34D399', '#F87171'];
 
   const [data, setData] = useState({
     labels: [],
@@ -24,13 +27,10 @@ export default function Result() {
   });
 
   useEffect(() => {
-    // Simulate fetching data or using default data
     const fetchData = async () => {
-      // If 'choice' is not provided, you can set default labels and data
       const defaultLabels = ['Option A', 'Option B'];
       const defaultData = [50, 50];
 
-      // You can customize the labels and data based on 'choice' or use defaults
       const labels = choice ? [`You chose ${choice}`, 'Others'] : defaultLabels;
       const chartData = choice
         ? [Math.floor(Math.random() * 50) + 50, Math.floor(Math.random() * 50)]
@@ -41,7 +41,7 @@ export default function Result() {
         datasets: [
           {
             data: chartData,
-            backgroundColor: ['#34D399', '#F87171'],
+            backgroundColor: colors,
           },
         ],
       });
