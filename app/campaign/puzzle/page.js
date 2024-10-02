@@ -109,7 +109,7 @@ export default function Puzzle() {
           ></div>
         ))}
       </div>
-      <p className="mt-6">
+      <p className="mt-6 text-black">
         {isDisplayingSequence
           ? 'Watch the sequence'
           : isUserTurn
@@ -117,7 +117,7 @@ export default function Puzzle() {
           : ''}
       </p>
       {/* Display the sequences for debugging */}
-      <div className="mt-6">
+      <div className="mt-6 text-black">
         <p>Sequence: {sequence.join(', ')}</p>
         <p>User Input: {userInput.join(', ')}</p>
       </div>
