@@ -1,3 +1,4 @@
+// File: ./app/campaign/result/page.js
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -11,12 +12,14 @@ import {
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export default function Result() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const choice = searchParams.get('choice');
+
+  const colors = ['#34D399', '#F87171'];
 
   const [data, setData] = useState({
     labels: [],
@@ -38,7 +41,7 @@ export default function Result() {
         datasets: [
           {
             data: chartData,
-            backgroundColor: ['#34D399', '#F87171'],
+            backgroundColor: colors,
           },
         ],
       });
