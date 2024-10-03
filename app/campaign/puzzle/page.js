@@ -27,6 +27,17 @@ export default function Puzzle() {
   const [progress, setProgress] = useState(1);
   const [showBear, setShowBear] = useState(false);
 
+  // Set the CSS variable for viewport height
+  useEffect(() => {
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    setVh();
+    window.addEventListener("resize", setVh);
+    return () => window.removeEventListener("resize", setVh);
+  }, []);
+
   // Generate the random sequence when the component mounts
   useEffect(() => {
     generateNewSequence(progress + 2); // Start with length 3
@@ -150,8 +161,13 @@ export default function Puzzle() {
 
   return (
     <div
-      className="flex flex-col items-center justify-center h-screen bg-gray-100 bg-cover bg-center relative"
-      style={{ backgroundImage: "url(/images/spring-wallpaper.png)" }}
+      className="flex flex-col items-center justify-center w-screen relative"
+      style={{
+        height: "calc(var(--vh, 1vh) * 100)",
+        backgroundImage: "url(/images/spring-wallpaper.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       {/* Header */}
       <div className="flex w-full">
