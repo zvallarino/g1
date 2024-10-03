@@ -2,16 +2,16 @@
 import React from 'react';
 import Image from 'next/image';
 
-const CircularLogo = ({ src, alt, className }) => {
+const CircularLogo = ({ src, alt, className, size = '24' }) => {
   return (
-    <div className={`relative overflow-hidden border-8 border-black ${className}`}>
+    <div
+      className={`relative overflow-hidden bg-white border-black border-r-2 border-b-2 rounded-br-lg w-${size} h-${size} ${className}`}
+    >
       <Image
         src={src}
         alt={alt}
-        layout="fill"
-        objectFit="cover"
-        objectPosition="center"
-        className="rounded-full"
+        fill
+        className="object-cover object-center"
       />
     </div>
   );

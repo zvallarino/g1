@@ -4,14 +4,15 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import CircularLogo from '@/components/CircularLogo';
+import GameButton from '@/components/GameButton';
 
 // Reusable Components for better organization
 const Spacer = ({ className }) => <div className={`hidden md:block ${className}`}>spacer</div>;
 
-const DialogueBox = ({ children }) => (
-  <div className="flex items-center bg-white border-4 rounded-md border-black p-4 mb-4">
-    <p className="text-2xl md:text-4xl font-bold text-center text-black">
-      {children}
+const DialogueBox = ({ text }) => (
+  <div className=" bg-white border-4 rounded-md border-black p-4">
+    <p className="text-4xl font-bold text-center text-black">
+      {text}
     </p>
   </div>
 );
@@ -28,14 +29,19 @@ const NextButton = ({ onClick, text }) => (
 );
 
 const GirlImage = () => (
-  <div className="w-full flex justify-center ">
-    <Image
-      src="/images/MainGirl.png"
-      alt="Girl"
-      width={600}
-      height={600}
-      className="max-w-xs md:max-w-full"
-    />
+  <div className="w-full flex justify-end items-center">
+    <div className="relative w-full h-full">
+      <Image
+        src="/images/MainGirl.png"
+        alt="Girl"
+        fill
+        className="object-contain object-right"
+        sizes="(max-width: 768px) 100vw,
+               (max-width: 1200px) 75vw,
+               50vw"
+        priority
+      />
+    </div>
   </div>
 );
 
@@ -44,37 +50,30 @@ export default function Home() {
 
   return (
     <div
-      className="relative flex flex-col md:flex-row md:items-end justify-center min-h-screen bg-cover bg-center"
+      className="flex-col w-screen h-screen bg-cover bg-center"
       style={{ backgroundImage: 'url(/images/background.jpg)' }}
     >
-      {/* Circular Logo positioned top-left on mobile, within layout on desktop */}
-      <CircularLogo
-        src="/images/Poco2.png"
-        alt="Logo"
-        className="w-24 h-24 md:w-64 md:h-64 absolute md:static z-10"
-      />
+    <div className='flex  h-[10%]'>
 
-      <div className="flex flex-col md:flex-row items-center w-full">
-        {/* Left Spacer */}
-        <Spacer className="md:w-1/4 bg-blue-200" />
+    <div className='flex'>
+    <CircularLogo
+  src="/images/Poco2.png"
+  alt="Logo"
+  className="w-20 h-full z-10"
+/>
+    </div>
+    <div className='flex flex-1 '>
+    </div>
+   
+     
+    </div>
+    <div className='flex-col  h-[30%] w-full'>
+    <div className='flex  h-1/3'></div> 
+    <div className = "flex w-full  justify-center"><DialogueBox text={"Dilemma Dash"} /></div>  
+    <div className = "flex w-full  justify-center my-2"><GameButton path = {"/main-menu"} text = {"Start"}/></div>  
 
-        {/* Middle Section */}
-        <div className="w-full md:w-1/4 flex flex-col items-center p-4">
-          {/* Dialogue Box */}
-          <DialogueBox>Dilemma Dash!</DialogueBox>
-          {/* Next Button */}
-          <NextButton onClick={() => router.push('/campaign')} text="Start" />
-        </div>
-
-        {/* Right Section */}
-        <div className="w-full md:w-1/2 flex flex-col justify-end items-center">
-          {/* Girl Image */}
-          <GirlImage />
-        </div>
-
-        {/* Right Spacer */}
-        <Spacer className="md:w-1/4 bg-blue-200" />
-      </div>
+    </div>
+    <div className='flex  h-[60%]'><GirlImage /></div>
     </div>
   );
 }
