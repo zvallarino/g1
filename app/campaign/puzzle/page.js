@@ -170,37 +170,44 @@ export default function Puzzle() {
       }}
     >
       {/* Header */}
-      <div className="flex w-full">
-        <div className="flex w-[10%]"></div>
-        <div className="flex w-[80%] bg-gray-500 rounded-md items-center my-2 py-2 bg-diagonal-stripes">
-          <div className="flex w-[30%]">
-            {[...Array(3)].map((_, index) => (
-              <IoIosHeart
-                key={index}
-                style={{
-                  color: index < lives ? "red" : "black",
-                  fontSize: "24px",
-                }}
-                className="ml-1"
-              />
-            ))}
-          </div>
-          <div className="flex w-1/2 text-4xl ml-1 font-bold">Level 1</div>
-          <div className="flex">
-            {[...Array(3)].map((_, index) => (
-              <FaCircle
-                key={index}
-                style={{
-                  color: index < progress ? "#90E2AE" : "gray",
-                  fontSize: "20px",
-                }}
-                className="mr-1"
-              />
-            ))}
-          </div>
+      {/* Header */}
+    <div className="flex w-full">
+      <div className="flex w-[15%]"></div>
+      <div className="flex w-[75%] bg-gray-500 rounded-md items-center my-2 py-2 bg-diagonal-stripes">
+        {/* Hearts Div */}
+        <div className="flex w-[30%]">
+          {[...Array(3)].map((_, index) => (
+            <IoIosHeart
+              key={index}
+              style={{
+                color: index < lives ? "red" : "black",
+                fontSize: "24px",
+              }}
+              className="ml-1"
+            />
+          ))}
         </div>
-        <div className="flex w-[10%]"></div>
+        {/* Level 1 Div */}
+        <div className="flex w-[50%] text-4xl font-bold justify-center">
+          Level 1
+        </div>
+        {/* Circles Div */}
+        <div className="flex w-[20%] justify-end">
+        {[...Array(3)].map((_, index) => (
+  <FaCircle
+    key={index}
+    style={{
+      color: index < progress ? "#90E2AE" : "gray",
+      fontSize: "20px",
+    }}
+    className={`ml-1 ${index === 2 ? 'mr-1' : ''}`}
+  />
+))}
+        </div>
       </div>
+      <div className="flex w-[15%]"></div>
+    </div>
+
 
       {/* Game Board */}
       <div className="bg-white p-8 rounded-md relative">
