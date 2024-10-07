@@ -26,7 +26,7 @@ export default function MainMenu() {
         backgroundPosition: 'center',
       }}
     >
-      <div className="flex flex-col h-1/3 bg-gray-100 p-4 border-2 border-black rounded-md items-center justify-evenly">
+      <div className="flex flex-col bg-gray-100 p-4 border-2 border-black rounded-md items-center space-y-4">
         <h1 className="text-4xl font-bold text-black">Main Menu</h1>
         <button
           onClick={() => router.push('/campaign')}
