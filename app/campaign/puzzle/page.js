@@ -171,8 +171,8 @@ export default function Puzzle() {
     >
       {/* Header */}
       <div className="flex w-full">
-        <div className="flex w-[15%]"></div>
-        <div className="flex w-[75%] bg-gray-500 rounded-md items-center my-2 py-2 bg-diagonal-stripes">
+        <div className="flex w-[10%]"></div>
+        <div className="flex w-[80%] bg-gray-500 rounded-md items-center my-2 py-2 bg-diagonal-stripes">
           <div className="flex w-[30%]">
             {[...Array(3)].map((_, index) => (
               <IoIosHeart
@@ -199,7 +199,7 @@ export default function Puzzle() {
             ))}
           </div>
         </div>
-        <div className="flex w-[15%]"></div>
+        <div className="flex w-[10%]"></div>
       </div>
 
       {/* Game Board */}
