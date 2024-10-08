@@ -1,0 +1,197 @@
+[
+    {
+        "id": 1,
+        "question": "Do you look for appearance or personality in a mate?",
+        "answers": ["Looks", "Mind"]
+      },
+      {
+        "id": 2,
+        "question": "Have you been told your romantic standards were too high?",
+        "answers": ["Yes", "Not that I recall"]
+      },
+      {
+        "id": 3,
+        "question": "Do you get bored easily?",
+        "answers": ["No", "Sure"]
+      },
+      {
+        "id": 4,
+        "question": "Ever been told you have poor taste in partners?",
+        "answers": ["No", "Yeah"]
+      },
+      {
+        "id": 5,
+        "question": "Are you more of a Sadist or a Masochist?",
+        "answers": ["Masochist", "Sadist"]
+      },
+      {
+        "id": 6,
+        "question": "Have you changed your personal style for someone else?",
+        "answers": ["Nope", "Sure"]
+      },
+      {
+        "id": 7,
+        "question": "Have you ever cheated before?",
+        "answers": ["I plead the 5th", "I don't think so"]
+      },
+      {
+        "id":8,
+        "question": "Do you spend money on fads?",
+        "answers": ["Yeah", "Nope"]
+      },
+      {
+        "id": 9,
+        "question": "Is age just a number?",
+        "answers": ["There are limits", "It's all about love"]
+      },
+      {
+        "id": 10,
+        "question": "How do you make decisions?",
+        "answers": ["My gut", "My mind"]
+      },
+      {
+        "id": 11,
+        "question": "Do you carefully choose your underwear each day?",
+        "answers": ["Yes", "Not really"]
+      },
+      {
+        "id": 12,
+        "question": "Will you fight dirty to win at anything?",
+        "answers": ["Of course", "That's not truly winning"]
+      },
+      {
+        "id": 13,
+        "question": "How does a life of no responsibility sound?",
+        "answers": ["Sign me up", "No way"]
+      },
+      {
+        "id": 14,
+        "question": "Do you like children?",
+        "answers": ["Love 'em", "Ugh!"]
+      },
+      {
+        "id": 15,
+        "question": "Is good housekeeping important in a partner?",
+        "answers": ["Yes", "Not really"]
+      },
+      {
+        "id": 16,
+        "question": "Would you want your children to be like you?",
+        "answers": ["As much as possible", "One of me is enough"]
+      },
+      {
+        "id": 17,
+        "question": "What's your take on praying mantis mating habits?",
+        "answers": ["It makes me nauseous", "Whatever"]
+      },
+      {
+        "id": 18,
+        "question": "Have you ever been told you were stingy?",
+        "answers": ["Maybe...", "No"]
+      },
+      {
+        "id": 19,
+        "question": "Your lover's into baby play. What do you do?",
+        "answers": ["I'll try anything once", "That's a dealbreaker"]
+      },
+      {
+        "id": 20,
+        "question": "Have you ever asked a lover for forgiveness?",
+        "answers": ["Yeah, so?", "No"]
+      },
+      {
+        "id": 21,
+        "question": "If you get a call from someone you don't like, do you...",
+        "answers": ["Answer it", "Straight to voicemail!"]
+      },
+      {
+        "id": 22,
+        "question": "What if your lover is a good friend with someone of your sex?",
+        "answers": ["I'd be bothered", "I wouldn't care"]
+      },
+      {
+        "id": 23,
+        "question": "What do you do if you doubt your lover?",
+        "answers": ["Reaffirm my trust", "Talk to them"]
+      },
+      {
+        "id": 24,
+        "question": "Would you try to steal your friend's lover?",
+        "answers": ["Can't stop the heart", "I'll hold back"]
+      },
+      {
+        "id": 25,
+        "question": "Is it okay to lie if you'll never be caught?",
+        "answers": ["No problem there", "I still can't lie"]
+      },
+      {
+        "id": 26,
+        "question": "Someone's hitting on your lover!",
+        "answers": ["Step in and end it", "Trust your lover"]
+      },
+      {
+        "id": 27,
+        "question": "Which is harder: lying or being lied to?",
+        "answers": ["Lying", "Being lied to"]
+      },
+      {
+        "id": 28,
+        "question": "Have you ever looked up dirty words for kicks?",
+        "answers": ["You got me", "Nope"]
+      },
+      {
+        "id": 29,
+        "question": "Your lover is cheating on you. Do you...?",
+        "answers": ["Break up with them", "Make them end it"]
+      },
+      {
+        "id": 30,
+        "question": "Could you show everything in your inbox to your lover?",
+        "answers": ["Of course!", "Eh...I don't think so"]
+      },
+      {
+        "id": 31,
+        "question": "Do you have to carefully choose which underwear to wear each day?",
+        "answers": ["Yes", "Not really"]
+      },
+      {
+        "id": 32,
+        "question": "Do you gesticulate while on the phone?",
+        "answers": ["Who doesn't?", "That's stupid"]
+      },
+      {
+        "id": 33,
+        "question": "You've suddenly changed sexes. Where do you go?",
+        "answers": ["The hospital", "The shower room"]
+      },
+      {
+        "id": 34,
+        "question": "What are your thoughts on underpants?",
+        "answers": ["You wear it... Under your pants", "It can go anywhere"]
+      },
+      {
+        "id": 35,
+        "question": "If you were suddenly rich, would you tell your lover?",
+        "answers": ["Yes, of course", "No, it's all mine"]
+      },
+      {
+        "id": 36,
+        "question": "Which looks better on men?",
+        "answers": ["Briefs", "Boxers"]
+      },
+      {
+        "id": 37,
+        "question": "Do you buy too much food when you're hungry?",
+        "answers": ["No", "Yes"]
+      },
+      {
+        "id": 38,
+        "question": "You must kiss one of these. Choose!",
+        "answers": ["A cephalopod-like alien", "A beautiful corpse"]
+      },
+      {
+        "id": 39,
+        "question": "Has being embarrassed ever turned you on?",
+        "answers": ["...Yes", "No!"]
+      }
+    ]
