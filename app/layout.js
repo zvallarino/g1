@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 // app/layout.js
-import { QuestionProvider } from './contexts/QuestionContext';
+import { QuestionProvider } from './context/QuestionContext';
 
 export default function RootLayout({ children }) {
   return (

@@ -3,9 +3,8 @@
 
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import questions from '../../../questions.json'; // Adjust the path if necessary
-// import { QuestionContext } from '../../../contexts/QuestionContext';
 
 
 // Reusable components for better organization
@@ -44,11 +43,7 @@ export default function Question() {
   const router = useRouter();
   const [randomQuestion, setRandomQuestion] = useState(null);
 
-  const {
-    currentQuestion,
-    setCurrentQuestion,
-    setUserChoice,
-  } = useContext(QuestionContext);
+
 
 
   useEffect(() => {
