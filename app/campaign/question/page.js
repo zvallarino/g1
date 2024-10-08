@@ -58,7 +58,7 @@ export default function Question() {
           {/* Dialogue Box */}
           <DialogueBox />
           {/* Option Buttons */}
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-4 w-full">
             <OptionButton text="True" onClick={() => router.push('/campaign/result?choice=True')} />
             <OptionButton text="False" onClick={() => router.push('/campaign/result?choice=False')} />
           </div>
