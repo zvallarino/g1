@@ -1,4 +1,3 @@
-// app/campaign/result/ClientResult.js
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -70,12 +69,31 @@ export default function ClientResult() {
     setSelectedGroup(group);
   };
 
+  // Set the CSS variable for viewport height
+  useEffect(() => {
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+    return () => window.removeEventListener('resize', setVh);
+  }, []);
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-green-300 text-center">
-      <p className="text-xl mb-6 bg-white text-black mx-4 rounded-md border-2 border-black">
+    <div
+      className="flex flex-col items-center justify-center w-screen"
+      style={{
+        height: 'calc(var(--vh, 1vh) * 100)',
+        backgroundImage: 'url(/images/dragonfruit.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <p className="text-xl mb-6 bg-white text-black mx-4 rounded-md border-2 border-black p-4">
         Having just one sexual partner can lower your chances of getting HIV or other STIs?
       </p>
-      <div className="bg-white rounded-md border-2 border-black mb-4">
+      <div className="bg-white rounded-md border-2 border-black mb-4 p-4">
         <div className="w-64 h-64 mb-6">
           {data.datasets.length > 0 ? (
             <Pie data={data} />
@@ -84,7 +102,7 @@ export default function ClientResult() {
           )}
         </div>
       </div>
-      <div className="flex">
+      <div className="flex mb-4">
         <button
           onClick={() => handleGroupSelection('All')}
           disabled={selectedGroup === 'All'}

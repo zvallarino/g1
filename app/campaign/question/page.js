@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 // Reusable components for better organization
@@ -14,7 +14,7 @@ const DialogueBox = () => (
   </div>
 );
 
-const NextButton = ({ onClick,text}) => (
+const NextButton = ({ onClick }) => (
   <div className="w-full flex justify-center">
     <button
       onClick={onClick}
@@ -54,10 +54,10 @@ export default function Question() {
           {/* Dialogue Box */}
           <DialogueBox />
           {/* Next Button */}
-     <div className='flex w-full '>
-            <NextButton text = {"True"} onClick={() => router.push('/campaign/result')} />
-            <NextButton text = {"False"} onClick={() => router.push('/campaign/result')} />
-     </div>
+          <div className='flex'>
+            <NextButton text = {"True"} onClick={() => router.push('/campaign/question')} />
+            <NextButton text = {"False"}  onClick={() => router.push('/campaign/question')} />
+          </div>
           <div className="h-8 md:h-1/4"></div>
         </div>
 
