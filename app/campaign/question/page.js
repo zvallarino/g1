@@ -1,10 +1,10 @@
 'use client';
 
-import { useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 // Reusable components for better organization
-const Spacer = ({ className }) => <div className={`hidden md:block ${className}`}>spacer</div>;
+const Spacer = ({ className }) => <div className={`hidden md:block ${className}`}></div>;
 
 const DialogueBox = () => (
   <div className="flex items-center bg-white border-4 rounded-md border-black p-4 mb-4">
@@ -14,15 +14,13 @@ const DialogueBox = () => (
   </div>
 );
 
-const NextButton = ({ onClick,text}) => (
-  <div className="w-full flex justify-center">
-    <button
-      onClick={onClick}
-      className="relative px-6 py-3 text-white font-bold text-xl md:text-2xl tracking-wider uppercase bg-gradient-to-r from-red-600 to-yellow-500 shadow-lg transform transition-all duration-300 ease-out hover:scale-105 hover:shadow-[0px_0px_20px_#ff00ff,0px_0px_20px_#ff00ff]"
-    >
-      {text}
-    </button>
-  </div>
+const OptionButton = ({ onClick, text }) => (
+  <button
+    onClick={onClick}
+    className="relative px-6 py-3 mx-2 text-white font-bold text-xl md:text-2xl tracking-wider uppercase bg-gradient-to-r from-red-600 to-yellow-500 shadow-lg transform transition-all duration-300 ease-out hover:scale-105 hover:shadow-[0px_0px_20px_#ff00ff,0px_0px_20px_#ff00ff]"
+  >
+    {text}
+  </button>
 );
 
 const GirlImage = () => (
@@ -36,13 +34,19 @@ const GirlImage = () => (
     />
   </div>
 );
+
 export default function Question() {
   const router = useRouter();
 
   return (
     <div
-      className="flex flex-col md:flex-row items-center md:items-end justify-center h-screen bg-cover bg-center"
-      style={{ backgroundImage: 'url(/images/anime_city.jpg)' }}
+      className="flex flex-col md:flex-row items-center md:items-end justify-center w-screen"
+      style={{
+        height: 'calc(var(--vh, 1vh) * 100)',
+        backgroundImage: 'url(/images/anime_city.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
       <div className="flex flex-col md:flex-row items-center h-full w-full">
         {/* Left Spacer */}
@@ -53,11 +57,11 @@ export default function Question() {
           <div className="h-8 md:h-1/2"></div>
           {/* Dialogue Box */}
           <DialogueBox />
-          {/* Next Button */}
-     <div className='flex w-full '>
-            <NextButton text = {"True"} onClick={() => router.push('/campaign/result')} />
-            <NextButton text = {"False"} onClick={() => router.push('/campaign/result')} />
-     </div>
+          {/* Option Buttons */}
+          <div className="flex justify-center mt-4">
+            <OptionButton text="True" onClick={() => router.push('/campaign/result?choice=True')} />
+            <OptionButton text="False" onClick={() => router.push('/campaign/result?choice=False')} />
+          </div>
           <div className="h-8 md:h-1/4"></div>
         </div>
 
