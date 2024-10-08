@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter} from 'next/navigation';
 import Image from 'next/image';
 
 // Reusable components for better organization
