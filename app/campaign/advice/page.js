@@ -1,10 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-// Reusable components for better organization
-const Spacer = ({ className }) => <div className={`hidden md:block ${className}`}>spacer</div>;
+// Reusable components
+const Spacer = ({ className }) => <div className={`hidden md:block ${className}`}></div>;
 
 const DialogueBox = () => (
   <div className="flex items-center bg-white border-4 rounded-md border-black p-4 mb-4">
@@ -36,13 +37,29 @@ const GirlImage = () => (
     />
   </div>
 );
-export default function Advice() {
+
+export default function CampaignIntro() {
   const router = useRouter();
+
+  useEffect(() => {
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+    return () => window.removeEventListener('resize', setVh);
+  }, []);
 
   return (
     <div
-      className="flex flex-col md:flex-row items-center md:items-end justify-center h-screen bg-cover bg-center"
-      style={{ backgroundImage: 'url(/images/anime_city.jpg)' }}
+      className="flex flex-col md:flex-row items-center md:items-end justify-center w-screen"
+      style={{
+        height: 'calc(var(--vh, 1vh) * 100)',
+        backgroundImage: 'url(/images/anime_city.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
       <div className="flex flex-col md:flex-row items-center h-full w-full">
         {/* Left Spacer */}
