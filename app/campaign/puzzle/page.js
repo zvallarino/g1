@@ -38,8 +38,6 @@ export default function Puzzle() {
   const [showNopes, setShowNopes] = useState(false);
   const [showBear, setShowBear] = useState(false);
   const [showLostGame, setShowLostGame] = useState(false); // New state variable
-  const [gameStarted, setGameStarted] = useState(false); // Track if the game has started
-
 
   // Set the CSS variable for viewport height
   useEffect(() => {
@@ -223,14 +221,6 @@ export default function Puzzle() {
         backgroundPosition: "center",
       }}
     >
-       {!gameStarted && (
-        <button onClick={() => setGameStarted(true)} className="bg-green-500 text-white px-6 py-2 rounded-md">
-          Start Game
-        </button>
-      )}
-      
-      {gameStarted && (
-                <>
       {/* Header */}
       <div className="flex w-full">
         <div className="flex w-[15%]"></div>
@@ -311,9 +301,7 @@ export default function Puzzle() {
           ? "Repeat the sequence"
           : ""}
       </p>
- </>
-)}
-</div>
 
+    </div>
   );
 }

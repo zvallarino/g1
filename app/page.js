@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import CircularLogo from '@/components/CircularLogo';
-import GameButton from '@/components/GameButton';
+import StartButton from '@/components/StartButton';
 
 // Reusable Components
 const DialogueBox = ({ text }) => (
@@ -68,7 +68,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center h-1/3">
         <DialogueBox text="Dilemma Dash" />
         <div className="mt-4">
-          <GameButton path="/main-menu" text="Start" />
+          <StartButton path="/main-menu" text="Start" />
         </div>
       </div>
 
