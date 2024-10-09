@@ -1,16 +1,30 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { QuestionContext } from '../context/QuestionContext'; // Adjust the relative path
 
 // Reusable components
 const Spacer = ({ className }) => <div className={`hidden md:block ${className}`}></div>;
 
-const DialogueBox = () => (
+const sayings = [
+  "Hey! You look pretty smart. Can you solve this?",
+  "Nice work! I bet you can handle more.",
+  "You're on a roll! What's next?",
+  "Impressive! You’re breezing through these.",
+  "Whoa, you’re making this look easy!",
+  "Unstoppable! How far can you go?",
+  "Amazing! You’ve got some serious skills.",
+  "Is there any puzzle you can’t beat?",
+  "Genius alert! You’re crushing it.",
+  "Unbelievable! You’re a puzzle master."
+];
+
+const DialogueBox = ({saying}) => (
   <div className="flex items-center bg-white border-4 rounded-md border-black p-4 mb-4">
     <p className="text-2xl md:text-4xl font-bold text-center text-black">
-      Hey! You look pretty smart. Can you solve this?
+      {saying}
     </p>
   </div>
 );
@@ -40,6 +54,8 @@ const GirlImage = () => (
 
 export default function CampaignIntro() {
   const router = useRouter();
+  const { level } = useContext(QuestionContext);
+
 
   useEffect(() => {
     const setVh = () => {
@@ -69,7 +85,7 @@ export default function CampaignIntro() {
         <div className="w-full md:w-1/4 h-1/2 flex flex-col items-end justify-end">
           <div className="h-8 md:h-1/2"></div>
           {/* Dialogue Box */}
-          <DialogueBox />
+          <DialogueBox saying = {sayings[level-1]} />
           {/* Next Button */}
           <NextButton onClick={() => router.push('/campaign/puzzle')} />
           <div className="h-8 md:h-1/4"></div>
