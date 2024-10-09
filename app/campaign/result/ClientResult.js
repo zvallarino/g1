@@ -1,7 +1,8 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Pie } from 'react-chartjs-2';
+import { QuestionContext } from '../../context/QuestionContext'; // Adjust the relative path
 import {
   Chart as ChartJS,
   ArcElement,
@@ -14,6 +15,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 export default function ClientResult() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { currentQuestion, setCurrentQuestion, currentAnswers, setCurrentAnswers } = useContext(QuestionContext);
   const choice = searchParams.get('choice');
 
   const colors = ['#34D399', '#F87171'];
@@ -27,10 +29,10 @@ export default function ClientResult() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const defaultLabels = ['True', 'False'];
+      const defaultLabels = currentAnswers;
       const defaultData = [50, 50];
 
-      const labels = choice ? [`You chose ${choice}`, 'Others'] : defaultLabels;
+      const labels = defaultLabels || [];
       let chartData = [];
 
       // Generate random data based on the selected group
@@ -63,7 +65,7 @@ export default function ClientResult() {
     };
 
     fetchData();
-  }, [choice, selectedGroup]);
+  }, [choice, currentQuestion, currentAnswers, selectedGroup]); // Added selectedGroup to dependencies
 
   const handleGroupSelection = (group) => {
     setSelectedGroup(group);
@@ -91,7 +93,7 @@ export default function ClientResult() {
       }}
     >
       <p className="text-xl mb-6 bg-white text-black mx-4 rounded-md border-2 border-black p-4">
-        Having just one sexual partner can lower your chances of getting HIV or other STIs?
+        {currentQuestion?.question || 'Loading...'}
       </p>
       <div className="bg-white rounded-md border-2 border-black mb-4 p-4">
         <div className="w-64 h-64 mb-6">
@@ -132,7 +134,7 @@ export default function ClientResult() {
         </button>
       </div>
       <button
-        onClick={() => router.push('/main-menu')}
+        onClick={() => router.push('/campaign')}
         className="px-5 my-2 py-2 mx-2 bg-blue-500 text-white rounded-full"
       >
         Continue

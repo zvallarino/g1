@@ -4,6 +4,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useState, useContext } from 'react';
+import { QuestionContext } from '../../context/QuestionContext'; // Adjust the relative path
 import questions from '../../../questions.json'; // Adjust the path if necessary
 
 
@@ -41,7 +42,7 @@ const GirlImage = () => (
 
 export default function Question() {
   const router = useRouter();
-  const [randomQuestion, setRandomQuestion] = useState(null);
+  const { currentQuestion, setCurrentQuestion, currentAnswers, setCurrentAnswers } = useContext(QuestionContext);
 
 
 
@@ -49,17 +50,19 @@ export default function Question() {
   useEffect(() => {
     // Select a random question from the questions array
     const randomIndex = Math.floor(Math.random() * questions.length);
-    setRandomQuestion(questions[randomIndex]);
-  }, []);
+    setCurrentQuestion(questions[randomIndex]);
+    setCurrentAnswers(questions[randomIndex].answers);
+    console.log(questions[randomIndex].answers)
+  }, [questions]);
 
   const handleOptionClick = (selectedOption) => {
     // Navigate to the result page with the selected choice and question ID
     router.push(
-      `/campaign/result?choice=${encodeURIComponent(selectedOption)}&questionId=${randomQuestion.id}`
+      `/campaign/result?choice=${encodeURIComponent(selectedOption)}&questionId=${currentQuestion.id}`
     );
   };
 
-  if (!randomQuestion) {
+  if (!currentQuestion) {
     return <p>Loading...</p>;
   }
 
@@ -81,10 +84,10 @@ export default function Question() {
         <div className="w-full md:w-1/4 h-1/2 flex flex-col items-end justify-end">
           <div className="h-8 md:h-1/2"></div>
           {/* Dialogue Box */}
-          <DialogueBox questionText={randomQuestion.question} />
+          <DialogueBox questionText={currentQuestion.question} />
           {/* Option Buttons */}
           <div className="flex justify-center mt-4 w-full">
-            {randomQuestion.answers.map((option) => (
+            {currentQuestion.answers.map((option) => (
               <OptionButton
                 key={option}
                 text={option}

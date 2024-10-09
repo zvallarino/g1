@@ -1,18 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosHeart } from "react-icons/io";
 import { FaCircle } from "react-icons/fa6";
+import { QuestionContext } from "../../context/QuestionContext"; // Adjust the relative path
 
 export default function Puzzle() {
   const router = useRouter();
   const colors = ["red", "yellow", "blue", "green"];
+  const { lives, setLives, progress, setProgress, level, setLevel } =
+    useContext(QuestionContext);
+
   const colorClasses = {
     red: "bg-red-500",
     yellow: "bg-yellow-500",
     blue: "bg-blue-500",
     green: "bg-green-500",
+  };
+
+  // Assign notes to each color
+  const colorNotes = {
+    red: "C4",
+    yellow: "E4",
+    blue: "G4",
+    green: "C5",
   };
 
   // State variables
@@ -22,10 +34,10 @@ export default function Puzzle() {
   const [isUserTurn, setIsUserTurn] = useState(false);
   const [flashColor, setFlashColor] = useState(null);
   const [clickedColor, setClickedColor] = useState(null);
-  const [lives, setLives] = useState(3);
+
   const [showNopes, setShowNopes] = useState(false);
-  const [progress, setProgress] = useState(1);
   const [showBear, setShowBear] = useState(false);
+  const [showLostGame, setShowLostGame] = useState(false); // New state variable
 
   // Set the CSS variable for viewport height
   useEffect(() => {
@@ -52,13 +64,20 @@ export default function Puzzle() {
 
   // Function to generate a new random sequence with given length
   const generateNewSequence = (length) => {
+    
     const randomSequence = Array.from(
-      { length },
+      { length: length + level - 1 },
       () => colors[Math.floor(Math.random() * colors.length)]
     );
     setSequence(randomSequence);
     setUserInput([]);
     console.log("Random sequence:", randomSequence);
+  };
+
+  // Function to play a sound
+  const playSound = (fileName) => {
+    const audio = new Audio(`/sounds/${fileName}`);
+    audio.play();
   };
 
   // Function to play the sequence with added delay
@@ -71,6 +90,10 @@ export default function Puzzle() {
 
     for (let color of sequence) {
       setFlashColor(color);
+
+      // Play the associated sound
+      playSound(`${colorNotes[color]}.wav`);
+
       await new Promise((resolve) => setTimeout(resolve, 500)); // Show the color for 500ms
       setFlashColor(null);
       await new Promise((resolve) => setTimeout(resolve, 300)); // Pause for 300ms
@@ -86,7 +109,11 @@ export default function Puzzle() {
 
   // Handle user input
   const handleClick = (color) => {
-    if (isDisplayingSequence || !isUserTurn || showNopes || showBear) return;
+    if (isDisplayingSequence || !isUserTurn || showNopes || showBear || showLostGame)
+      return;
+
+    // Play the associated sound
+    playSound(`${colorNotes[color]}.wav`);
 
     // Flash the clicked color
     setClickedColor(color);
@@ -102,7 +129,11 @@ export default function Puzzle() {
     if (sequence[currentIndex] !== color) {
       if (lives > 1) {
         // Decrease lives
-        setLives(lives - 1);
+        setLives((prevLives) => prevLives - 1);
+
+        // Play lost life sound
+        playSound("lostlife.mp3");
+
         // Flash nopes.png
         setIsUserTurn(false);
         setShowNopes(true);
@@ -114,9 +145,21 @@ export default function Puzzle() {
           }, 500);
         }, 1000);
       } else {
-        // Game over, push to main menu
-        alert("Game Over");
-        router.push("/main-menu");
+        // Game over, play lost game sound and show image
+        setLives(0);
+
+        // Play lost game sound
+        playSound("lostgame.mp3");
+
+        setIsUserTurn(false);
+        setShowLostGame(true);
+        setTimeout(() => {
+          setShowLostGame(false);
+          setLives(3);
+          setLevel(1);
+          setProgress(1);
+          router.push("/main-menu");
+        }, 2000);
       }
     } else if (newInput.length === sequence.length) {
       // User completed the pattern correctly
@@ -124,15 +167,25 @@ export default function Puzzle() {
         // Increase progress, extend sequence length, flash bear.png, show new pattern
         setIsUserTurn(false);
         setShowBear(true);
+
+        // Play level up sound
+        playSound("levelup.mp3");
+
         setTimeout(() => {
           setShowBear(false);
-          setProgress(progress + 1);
+          setProgress((prevProgress) => prevProgress + 1);
           generateNewSequence(sequence.length + 1); // Increase sequence length by 1
         }, 1000);
       } else {
-        // Progress == 3, flash bear.png and redirect
+        // Progress == 3, level up, play level up sound, and redirect
         setIsUserTurn(false);
         setShowBear(true);
+
+        // Play level up sound
+        playSound("level-passed.mp3");
+
+        setLevel((prevLevel) => prevLevel + 1);
+        setProgress(1);
         setTimeout(() => {
           setShowBear(false);
           router.push("/campaign/advice");
@@ -170,44 +223,42 @@ export default function Puzzle() {
       }}
     >
       {/* Header */}
-      {/* Header */}
-    <div className="flex w-full">
-      <div className="flex w-[15%]"></div>
-      <div className="flex w-[75%] bg-gray-500 rounded-md items-center my-2 py-2 bg-diagonal-stripes">
-        {/* Hearts Div */}
-        <div className="flex w-[30%]">
-          {[...Array(3)].map((_, index) => (
-            <IoIosHeart
-              key={index}
-              style={{
-                color: index < lives ? "red" : "black",
-                fontSize: "24px",
-              }}
-              className="ml-1"
-            />
-          ))}
+      <div className="flex w-full">
+        <div className="flex w-[15%]"></div>
+        <div className="flex w-[75%] bg-gray-500 rounded-md items-center my-2 py-2 bg-diagonal-stripes">
+          {/* Hearts Div */}
+          <div className="flex w-[30%]">
+            {[...Array(3)].map((_, index) => (
+              <IoIosHeart
+                key={index}
+                style={{
+                  color: index < lives ? "red" : "black",
+                  fontSize: "24px",
+                }}
+                className="ml-1"
+              />
+            ))}
+          </div>
+          {/* Level Div */}
+          <div className="flex w-[50%] text-4xl font-bold justify-center">
+            Level {level}
+          </div>
+          {/* Circles Div */}
+          <div className="flex w-[20%] justify-end">
+            {[...Array(3)].map((_, index) => (
+              <FaCircle
+                key={index}
+                style={{
+                  color: index < progress ? "#90E2AE" : "gray",
+                  fontSize: "20px",
+                }}
+                className={`ml-1 ${index === 2 ? "mr-1" : ""}`}
+              />
+            ))}
+          </div>
         </div>
-        {/* Level 1 Div */}
-        <div className="flex w-[50%] text-4xl font-bold justify-center">
-          Level 1
-        </div>
-        {/* Circles Div */}
-        <div className="flex w-[20%] justify-end">
-        {[...Array(3)].map((_, index) => (
-  <FaCircle
-    key={index}
-    style={{
-      color: index < progress ? "#90E2AE" : "gray",
-      fontSize: "20px",
-    }}
-    className={`ml-1 ${index === 2 ? 'mr-1' : ''}`}
-  />
-))}
-        </div>
+        <div className="flex w-[15%]"></div>
       </div>
-      <div className="flex w-[15%]"></div>
-    </div>
-
 
       {/* Game Board */}
       <div className="bg-white p-8 rounded-md relative">
@@ -234,6 +285,13 @@ export default function Puzzle() {
             <img src="/images/bear.png" alt="Bear" />
           </div>
         )}
+
+        {/* Flash lostgame.png overlay */}
+        {showLostGame && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+            <img src="/images/lostgame.png" alt="Game Over" />
+          </div>
+        )}
       </div>
 
       {/* Instructions */}
@@ -246,10 +304,10 @@ export default function Puzzle() {
       </p>
 
       {/* Display the sequences for debugging */}
-      <div className="mt-6 text-black">
+      {/* <div className="mt-6 text-black">
         <p>Sequence: {sequence.join(", ")}</p>
         <p>User Input: {userInput.join(", ")}</p>
-      </div>
+      </div> */}
     </div>
   );
 }
