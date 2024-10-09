@@ -37,7 +37,10 @@ export default function Puzzle() {
 
   const [showNopes, setShowNopes] = useState(false);
   const [showBear, setShowBear] = useState(false);
-  const [showLostGame, setShowLostGame] = useState(false); // New state variable
+  const [showLostGame, setShowLostGame] = useState(false);
+
+  // New state variable to manage the game start
+  const [gameStarted, setGameStarted] = useState(false);
 
   // Set the CSS variable for viewport height
   useEffect(() => {
@@ -50,21 +53,22 @@ export default function Puzzle() {
     return () => window.removeEventListener("resize", setVh);
   }, []);
 
-  // Generate the random sequence when the component mounts
+  // Generate the random sequence when the game starts
   useEffect(() => {
-    generateNewSequence(progress + 2); // Start with length 3
-  }, []);
+    if (gameStarted) {
+      generateNewSequence(progress + 2); // Start with length 3
+    }
+  }, [gameStarted]);
 
   // Start playing the sequence after it's generated
   useEffect(() => {
-    if (sequence.length > 0) {
+    if (sequence.length > 0 && gameStarted) {
       playSequence();
     }
   }, [sequence]);
 
   // Function to generate a new random sequence with given length
   const generateNewSequence = (length) => {
-    
     const randomSequence = Array.from(
       { length: length + level - 1 },
       () => colors[Math.floor(Math.random() * colors.length)]
@@ -109,7 +113,13 @@ export default function Puzzle() {
 
   // Handle user input
   const handleClick = (color) => {
-    if (isDisplayingSequence || !isUserTurn || showNopes || showBear || showLostGame)
+    if (
+      isDisplayingSequence ||
+      !isUserTurn ||
+      showNopes ||
+      showBear ||
+      showLostGame
+    )
       return;
 
     // Play the associated sound
@@ -211,6 +221,17 @@ export default function Puzzle() {
     return classes;
   };
 
+  // Handle start button click
+  const handleStartClick = () => {
+    // Play the start button sound
+    playSound("startbutton.mp3");
+
+    // Wait for 1 second to let the sound play fully
+    setTimeout(() => {
+      setGameStarted(true);
+    }, 1000); // Adjust the delay as per the length of your audio
+  };
+
   return (
     <div
       className="flex flex-col items-center justify-center w-screen relative"
@@ -221,87 +242,108 @@ export default function Puzzle() {
         backgroundPosition: "center",
       }}
     >
-      {/* Header */}
-      <div className="flex w-full">
-        <div className="flex w-[15%]"></div>
-        <div className="flex w-[75%] bg-gray-500 rounded-md items-center my-2 py-2 bg-diagonal-stripes">
-          {/* Hearts Div */}
-          <div className="flex w-[30%]">
-            {[...Array(3)].map((_, index) => (
-              <IoIosHeart
-                key={index}
-                style={{
-                  color: index < lives ? "red" : "black",
-                  fontSize: "24px",
-                }}
-                className="ml-1"
-              />
-            ))}
-          </div>
-          {/* Level Div */}
-          <div className="flex w-[50%] text-4xl font-bold justify-center">
-            Level {level}
-          </div>
-          {/* Circles Div */}
-          <div className="flex w-[20%] justify-end">
-            {[...Array(3)].map((_, index) => (
-              <FaCircle
-                key={index}
-                style={{
-                  color: index < progress ? "#90E2AE" : "gray",
-                  fontSize: "20px",
-                }}
-                className={`ml-1 ${index === 2 ? "mr-1" : ""}`}
-              />
-            ))}
-          </div>
+      {/* Overlay with ready.jpg and Start button */}
+      {!gameStarted && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-90 z-50">
+          <img
+            src="/images/ready.jpg"
+            alt="Ready"
+            className="mb-4 w-3/4 max-w-md"
+          />
+          <button
+            onClick={handleStartClick}
+            className="bg-green-500 text-white px-6 py-3 rounded-md text-2xl font-bold hover:bg-green-600 transition-all duration-300"
+          >
+            Start
+          </button>
         </div>
-        <div className="flex w-[15%]"></div>
-      </div>
+      )}
 
-      {/* Game Board */}
-      <div className="bg-white p-8 rounded-md relative">
-        <div className="grid grid-cols-2 gap-4">
-          {colors.map((color) => (
-            <div
-              key={color}
-              onClick={() => handleClick(color)}
-              className={getClassName(color)}
-            ></div>
-          ))}
-        </div>
-
-        {/* Flash nopes.png overlay */}
-        {showNopes && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-            <img src="/images/nopes.png" alt="Nope" />
+      {/* Render the game only when gameStarted is true */}
+      {gameStarted && (
+        <>
+          {/* Header */}
+          <div className="flex w-full">
+            <div className="flex w-[15%]"></div>
+            <div className="flex w-[75%] bg-gray-500 rounded-md items-center my-2 py-2 bg-diagonal-stripes">
+              {/* Hearts Div */}
+              <div className="flex w-[30%]">
+                {[...Array(3)].map((_, index) => (
+                  <IoIosHeart
+                    key={index}
+                    style={{
+                      color: index < lives ? "red" : "black",
+                      fontSize: "24px",
+                    }}
+                    className="ml-1"
+                  />
+                ))}
+              </div>
+              {/* Level Div */}
+              <div className="flex w-[50%] text-4xl font-bold justify-center">
+                Level {level}
+              </div>
+              {/* Circles Div */}
+              <div className="flex w-[20%] justify-end">
+                {[...Array(3)].map((_, index) => (
+                  <FaCircle
+                    key={index}
+                    style={{
+                      color: index < progress ? "#90E2AE" : "gray",
+                      fontSize: "20px",
+                    }}
+                    className={`ml-1 ${index === 2 ? "mr-1" : ""}`}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="flex w-[15%]"></div>
           </div>
-        )}
 
-        {/* Flash bear.png overlay */}
-        {showBear && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-            <img src="/images/bear.png" alt="Bear" />
+          {/* Game Board */}
+          <div className="bg-white p-8 rounded-md relative">
+            <div className="grid grid-cols-2 gap-4">
+              {colors.map((color) => (
+                <div
+                  key={color}
+                  onClick={() => handleClick(color)}
+                  className={getClassName(color)}
+                ></div>
+              ))}
+            </div>
+
+            {/* Flash nopes.png overlay */}
+            {showNopes && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+                <img src="/images/nopes.png" alt="Nope" />
+              </div>
+            )}
+
+            {/* Flash bear.png overlay */}
+            {showBear && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+                <img src="/images/bear.png" alt="Bear" />
+              </div>
+            )}
+
+            {/* Flash lostgame.png overlay */}
+            {showLostGame && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+                <img src="/images/lostgame.png" alt="Game Over" />
+              </div>
+            )}
           </div>
-        )}
 
-        {/* Flash lostgame.png overlay */}
-        {showLostGame && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-            <img src="/images/lostgame.png" alt="Game Over" />
-          </div>
-        )}
-      </div>
-
-      {/* Instructions */}
-      <p className="mt-6 text-black">
-        {isDisplayingSequence
-          ? "Watch the sequence"
-          : isUserTurn
-          ? "Repeat the sequence"
-          : ""}
-      </p>
-
+          {/* Instructions */}
+          <p className="mt-6 text-black">
+            {isDisplayingSequence
+              ? "Watch the sequence"
+              : isUserTurn
+              ? "Repeat the sequence"
+              : ""}
+          </p>
+        </>
+      )}
     </div>
   );
 }
