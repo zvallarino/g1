@@ -86,7 +86,7 @@ export default function Puzzle() {
     setIsUserTurn(false);
 
     // Wait for 500ms before starting the sequence
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     for (let color of sequence) {
       setFlashColor(color);
@@ -303,11 +303,6 @@ export default function Puzzle() {
           : ""}
       </p>
 
-      {/* Display the sequences for debugging */}
-      {/* <div className="mt-6 text-black">
-        <p>Sequence: {sequence.join(", ")}</p>
-        <p>User Input: {userInput.join(", ")}</p>
-      </div> */}
     </div>
   );
 }
