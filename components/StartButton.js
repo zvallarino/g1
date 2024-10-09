@@ -2,12 +2,12 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import PropTypes from 'prop-types'; // Optional: For prop type validation
 
-const GameButton = ({ text, path, className = '' }) => {
+const StartButton = ({ text, path, className = '' }) => {
   const router = useRouter();
 
   const handleClick = () => {
     // Play the sound when the button is clicked
-    const audio = new Audio('/sounds/buttonpressed.mp3');
+    const audio = new Audio('/sounds/startbutton.mp3');
     audio.play();
 
     // Use a small delay to allow the sound to play before navigating
@@ -102,10 +102,10 @@ const GameButton = ({ text, path, className = '' }) => {
 };
 
 // Optional: Define PropTypes for better type checking
-GameButton.propTypes = {
+StartButton.propTypes = {
   text: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
   className: PropTypes.string,
 };
 
-export default GameButton;
+export default StartButton;
