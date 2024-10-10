@@ -22,9 +22,8 @@ export default function TestPress() {
 
   // State variables
   const [clickedColor, setClickedColor] = useState(null);
-
-  // State variable to manage the game start
   const [gameStarted, setGameStarted] = useState(false);
+  const [debugMessages, setDebugMessages] = useState([]);
 
   // Audio context and buffers
   let audioContext;
@@ -43,64 +42,89 @@ export default function TestPress() {
 
   // Function to initialize AudioContext and load audio buffers
   const initAudio = async () => {
-    // Create or resume the AudioContext
-    if (!audioContext) {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    } else if (audioContext.state === "suspended") {
-      await audioContext.resume();
+    try {
+      // Create or resume the AudioContext
+      if (!audioContext || audioContext.state === "closed") {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      } else if (audioContext.state === "suspended") {
+        await audioContext.resume();
+      }
+
+      // Load audio buffers if not already loaded
+      const loadSound = async (color) => {
+        const response = await fetch(`/sounds/${colorNotes[color]}.wav`);
+        if (!response.ok) {
+          throw new Error(`Failed to load sound for color: ${color}`);
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        audioBuffers[color] = audioBuffer;
+      };
+
+      // Load all sounds
+      await Promise.all(colors.map((color) => loadSound(color)));
+
+      // Load start button sound
+      const startResponse = await fetch("/sounds/startbutton.mp3");
+      if (!startResponse.ok) {
+        throw new Error("Failed to load start button sound");
+      }
+      const startArrayBuffer = await startResponse.arrayBuffer();
+      const startBuffer = await audioContext.decodeAudioData(startArrayBuffer);
+      audioBuffers["start"] = startBuffer;
+
+      console.log("Audio initialized successfully");
+    } catch (error) {
+      console.error("Error initializing audio:", error);
+      setDebugMessages((msgs) => [...msgs, error.message]);
     }
-
-    // Load audio buffers if not already loaded
-    const loadSound = async (color) => {
-      const response = await fetch(`/sounds/${colorNotes[color]}.wav`);
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-      audioBuffers[color] = audioBuffer;
-    };
-
-    // Load all sounds
-    await Promise.all(colors.map((color) => loadSound(color)));
-
-    // Load start button sound
-    const startResponse = await fetch("/sounds/startbutton.mp3");
-    const startArrayBuffer = await startResponse.arrayBuffer();
-    const startBuffer = await audioContext.decodeAudioData(startArrayBuffer);
-    audioBuffers["start"] = startBuffer;
   };
 
   // Function to play a sound using AudioContext
   const playSound = (color) => {
-    if (audioBuffers[color]) {
-      const source = audioContext.createBufferSource();
-      source.buffer = audioBuffers[color];
-      source.connect(audioContext.destination);
-      source.start(0);
+    try {
+      if (audioBuffers[color]) {
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffers[color];
+        source.connect(audioContext.destination);
+        source.start(0);
+        console.log(`Playing sound for color: ${color}`);
+      } else {
+        console.warn(`Audio buffer not found for color: ${color}`);
+        setDebugMessages((msgs) => [
+          ...msgs,
+          `Audio buffer not found for color: ${color}`,
+        ]);
+      }
+    } catch (error) {
+      console.error(`Error playing sound for color: ${color}`, error);
+      setDebugMessages((msgs) => [
+        ...msgs,
+        `Error playing sound for color: ${color}`,
+      ]);
     }
   };
 
   // Handle user input
   const handlePress = (color) => {
-    // Play the associated sound
+    console.log(`handlePress fired for color: ${color}`);
+    setDebugMessages((msgs) => [...msgs, `handlePress: ${color}`]);
     playSound(color);
-
-    // Flash the clicked color
     setClickedColor(color);
   };
 
   const handleRelease = () => {
-    // Reset the clicked color
+    console.log("handleRelease fired");
+    setDebugMessages((msgs) => [...msgs, "handleRelease"]);
     setClickedColor(null);
   };
 
   // Handle start button click
   const handleStartClick = async () => {
-    // Initialize AudioContext and load sounds
+    console.log("Start button clicked");
+    setDebugMessages((msgs) => [...msgs, "Start button clicked"]);
     await initAudio();
-
-    // Play the start button sound
     playSound("start");
-
-    // Proceed immediately
     setGameStarted(true);
   };
 
@@ -157,6 +181,16 @@ export default function TestPress() {
                 ></div>
               ))}
             </div>
+          </div>
+
+          {/* Debug Messages */}
+          <div className="mt-4 p-4 bg-gray-100 rounded-md w-3/4 max-w-md">
+            <h2 className="text-lg font-bold mb-2">Debug Log:</h2>
+            {debugMessages.slice(-5).map((msg, index) => (
+              <p key={index} className="text-sm">
+                {msg}
+              </p>
+            ))}
           </div>
         </>
       )}
