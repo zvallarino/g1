@@ -1,12 +1,10 @@
-// app/campaign/question/page.js
 'use client';
 
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import { QuestionContext } from '../../context/QuestionContext'; // Adjust the relative path
 import questions from '../../../questions.json'; // Adjust the path if necessary
-
 
 // Reusable components for better organization
 const Spacer = ({ className }) => <div className={`hidden md:block ${className}`}></div>;
@@ -42,24 +40,82 @@ const GirlImage = () => (
 
 export default function Question() {
   const router = useRouter();
-  const { currentQuestion, setCurrentQuestion, currentAnswers, setCurrentAnswers } = useContext(QuestionContext);
+  const {
+    currentQuestion,
+    setCurrentQuestion,
+    currentAnswers,
+    setCurrentAnswers,
+  } = useContext(QuestionContext);
 
+  // Audio context and buffer using useRef to persist across renders
+  const audioContextRef = useRef(null);
+  const audioBufferRef = useRef(null);
 
+  // Initialize audio context and load audio buffer when component mounts
+  useEffect(() => {
+    const initAudio = async () => {
+      try {
+        // Create or resume the AudioContext
+        if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
+          audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        } else if (audioContextRef.current.state === 'suspended') {
+          await audioContextRef.current.resume();
+        }
 
+        // Load the button sound
+        const response = await fetch('/sounds/startbutton.mp3');
+        if (!response.ok) {
+          throw new Error('Failed to load start button sound');
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await audioContextRef.current.decodeAudioData(arrayBuffer);
+        audioBufferRef.current = audioBuffer;
+
+        console.log('Audio initialized successfully');
+      } catch (error) {
+        console.error('Error initializing audio:', error);
+      }
+    };
+
+    initAudio();
+  }, []);
+
+  // Function to play the sound using AudioContext
+  const playSound = () => {
+    try {
+      if (audioBufferRef.current) {
+        const source = audioContextRef.current.createBufferSource();
+        source.buffer = audioBufferRef.current;
+        source.connect(audioContextRef.current.destination);
+        source.start(0);
+        console.log('Playing sound: startbutton');
+      } else {
+        console.warn('Audio buffer not found for start button sound');
+      }
+    } catch (error) {
+      console.error('Error playing sound: startbutton', error);
+    }
+  };
 
   useEffect(() => {
     // Select a random question from the questions array
     const randomIndex = Math.floor(Math.random() * questions.length);
     setCurrentQuestion(questions[randomIndex]);
     setCurrentAnswers(questions[randomIndex].answers);
-    console.log(questions[randomIndex].answers)
-  }, [questions]);
+    console.log(questions[randomIndex].answers);
+  }, []);
 
   const handleOptionClick = (selectedOption) => {
-    // Navigate to the result page with the selected choice and question ID
-    router.push(
-      `/campaign/result?choice=${encodeURIComponent(selectedOption)}&questionId=${currentQuestion.id}`
-    );
+    // Play the sound effect before navigating
+    playSound();
+
+    // Delay navigation slightly to allow the sound to play
+    setTimeout(() => {
+      // Navigate to the result page with the selected choice and question ID
+      router.push(
+        `/campaign/result?choice=${encodeURIComponent(selectedOption)}&questionId=${currentQuestion.id}`
+      );
+    }, 200); // Adjust delay based on sound length if needed
   };
 
   if (!currentQuestion) {
@@ -85,7 +141,7 @@ export default function Question() {
           <div className="h-8 md:h-1/2"></div>
           {/* Dialogue Box */}
           <DialogueBox questionText={currentQuestion.question} />
-          {/* Option Buttons */}
+          {/* Option Buttons with Sound */}
           <div className="flex justify-center mt-4 w-full">
             {currentQuestion.answers.map((option) => (
               <OptionButton

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { QuestionContext } from '../context/QuestionContext'; // Adjust the relative path
@@ -21,7 +21,7 @@ const sayings = [
   "Unbelievable! You’re a puzzle master."
 ];
 
-const DialogueBox = ({saying}) => (
+const DialogueBox = ({ saying }) => (
   <div className="flex items-center bg-white border-4 rounded-md border-black p-4 mb-4">
     <p className="text-2xl md:text-4xl font-bold text-center text-black">
       {saying}
@@ -56,6 +56,66 @@ export default function CampaignIntro() {
   const router = useRouter();
   const { level } = useContext(QuestionContext);
 
+  // Audio context and buffers using useRef to persist across renders
+  const audioContextRef = useRef(null);
+  const audioBuffersRef = useRef({});
+
+  // Initialize audio context and load audio buffer for the button sound
+  useEffect(() => {
+    const initAudio = async () => {
+      try {
+        // Create or resume the AudioContext
+        if (!audioContextRef.current || audioContextRef.current.state === "closed") {
+          audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        } else if (audioContextRef.current.state === "suspended") {
+          await audioContextRef.current.resume();
+        }
+
+        // Load button sound
+        const response = await fetch('/sounds/startbutton.mp3');
+        if (!response.ok) {
+          throw new Error("Failed to load start button sound");
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await audioContextRef.current.decodeAudioData(arrayBuffer);
+        audioBuffersRef.current["start"] = audioBuffer;
+
+        console.log("Audio initialized successfully");
+      } catch (error) {
+        console.error("Error initializing audio:", error);
+      }
+    };
+
+    initAudio();
+  }, []);
+
+  // Function to play the sound using AudioContext
+  const playSound = (soundKey) => {
+    try {
+      if (audioBuffersRef.current[soundKey]) {
+        const source = audioContextRef.current.createBufferSource();
+        source.buffer = audioBuffersRef.current[soundKey];
+        source.connect(audioContextRef.current.destination);
+        source.start(0);
+        console.log(`Playing sound: ${soundKey}`);
+      } else {
+        console.warn(`Audio buffer not found for sound: ${soundKey}`);
+      }
+    } catch (error) {
+      console.error(`Error playing sound: ${soundKey}`, error);
+    }
+  };
+
+  // Handle Next button click with sound
+  const handleNextClick = () => {
+    // Play the start button sound
+    playSound("start");
+
+    // Delay navigation slightly to allow the sound to play
+    setTimeout(() => {
+      router.push('/campaign/puzzle');
+    }, 200); // Adjust delay based on sound length if needed
+  };
 
   useEffect(() => {
     const setVh = () => {
@@ -83,17 +143,17 @@ export default function CampaignIntro() {
 
         {/* Middle Section */}
         <div className="w-full md:w-1/4 h-[30%] flex flex-col items-end justify-end">
-        <div className='w-full h-[50%]'>   {/*  Spacer */}</div>
+          <div className='w-full h-[50%]'></div>
           <div className="h-8 md:h-1/2"></div>
           {/* Dialogue Box */}
-          <DialogueBox saying = {sayings[level-1]} />
-          {/* Next Button */}
-          <NextButton onClick={() => router.push('/campaign/puzzle')} />
+          <DialogueBox saying={sayings[level - 1]} />
+          {/* Next Button with Sound */}
+          <NextButton onClick={handleNextClick} />
           <div className="h-8 md:h-1/4"></div>
         </div>
 
         {/* Right Section */}
-        <div className="w-full md:w-1/2 h-[70%] flex flex-col justify-end ">
+        <div className="w-full md:w-1/2 h-[70%] flex flex-col justify-end">
           {/* Girl Image */}
           <GirlImage />
         </div>
