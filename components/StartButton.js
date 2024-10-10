@@ -66,7 +66,7 @@ const StartButton = ({ text, path, className = '' }) => {
           text-center
           px-4
           py-2
-          text-lg
+          text-2xl	
           font-bold
           text-button-text
           tracking-widest

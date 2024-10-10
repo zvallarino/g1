@@ -56,7 +56,7 @@ export default function Home() {
       }}
     >
       {/* Top Section */}
-      <div className="flex items-center h-1/6">
+      <div className="flex h-1/6">
         <CircularLogo
           src="/images/Poco2.png"
           alt="Logo"
@@ -65,7 +65,7 @@ export default function Home() {
       </div>
 
       {/* Middle Section */}
-      <div className="flex flex-col items-center justify-center h-1/3">
+      <div className="flex flex-col items-center h-1/5">
         <DialogueBox text="Dilemma Dash" />
         <div className="mt-4">
           <StartButton path="/main-menu" text="Start" />

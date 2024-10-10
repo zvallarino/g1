@@ -22,7 +22,7 @@ const DialogueBox = ({ questionText }) => (
 const OptionButton = ({ onClick, text }) => (
   <button
     onClick={onClick}
-    className="relative px-6 py-3 mx-2 text-white font-bold text-xl md:text-2xl tracking-wider uppercase bg-gradient-to-r from-red-600 to-yellow-500 shadow-lg transform transition-all duration-300 ease-out hover:scale-105 hover:shadow-[0px_0px_20px_#ff00ff,0px_0px_20px_#ff00ff]"
+    className="relative px-6 py-3 mx-2 text-white font-bold text-xl rounded-md md:text-2xl tracking-wider uppercase bg-gradient-to-r from-red-600 to-yellow-500 shadow-lg transform transition-all duration-300 ease-out hover:scale-105 hover:shadow-[0px_0px_20px_#ff00ff,0px_0px_20px_#ff00ff]"
   >
     {text}
   </button>
@@ -99,7 +99,7 @@ export default function Question() {
         </div>
 
         {/* Right Section */}
-        <div className="w-full md:w-1/2 h-2/3 flex flex-col justify-end ">
+        <div className="w-full md:w-1/2 h-[70%] flex flex-col justify-end ">
           {/* Girl Image */}
           <GirlImage />
         </div>
