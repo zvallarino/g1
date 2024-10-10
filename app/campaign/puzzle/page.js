@@ -227,6 +227,7 @@ export default function Puzzle() {
         setTimeout(() => {
           setShowLostGame(false);
           setLives(3);
+          setLevel(1)
           setProgress(1);
           router.push("/main-menu");
         }, 2000);
