@@ -33,7 +33,7 @@ const NextButton = ({ onClick }) => (
   <div className="w-full flex justify-center">
     <button
       onClick={onClick}
-      className="relative px-6 py-3 text-white font-bold text-xl md:text-2xl tracking-wider uppercase bg-gradient-to-r from-red-600 to-yellow-500 shadow-lg transform transition-all duration-300 ease-out hover:scale-105 hover:shadow-[0px_0px_20px_#ff00ff,0px_0px_20px_#ff00ff]"
+      className="relative px-6 py-3 text-white font-bold text-2xl rounded-md md:text-2xl tracking-wider uppercase bg-gradient-to-r from-red-600 to-yellow-500 shadow-lg transform transition-all duration-300 ease-out hover:scale-105 hover:shadow-[0px_0px_20px_#ff00ff,0px_0px_20px_#ff00ff]"
     >
       Next
     </button>
@@ -82,7 +82,8 @@ export default function CampaignIntro() {
         <Spacer className="md:w-1/4 bg-blue-200" />
 
         {/* Middle Section */}
-        <div className="w-full md:w-1/4 h-1/2 flex flex-col items-end justify-end">
+        <div className="w-full md:w-1/4 h-[30%] flex flex-col items-end justify-end">
+        <div className='w-full h-[50%]'>   {/*  Spacer */}</div>
           <div className="h-8 md:h-1/2"></div>
           {/* Dialogue Box */}
           <DialogueBox saying = {sayings[level-1]} />
@@ -92,7 +93,7 @@ export default function CampaignIntro() {
         </div>
 
         {/* Right Section */}
-        <div className="w-full md:w-1/2 h-2/3 flex flex-col justify-end ">
+        <div className="w-full md:w-1/2 h-[70%] flex flex-col justify-end ">
           {/* Girl Image */}
           <GirlImage />
         </div>
