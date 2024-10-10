@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function TestPress() {
   const colors = ["red", "yellow", "blue", "green"];
@@ -25,9 +25,9 @@ export default function TestPress() {
   const [gameStarted, setGameStarted] = useState(false);
   const [debugMessages, setDebugMessages] = useState([]);
 
-  // Audio context and buffers
-  let audioContext;
-  const audioBuffers = {};
+  // Audio context and buffers using useRef to persist across renders
+  const audioContextRef = useRef(null);
+  const audioBuffersRef = useRef({});
 
   useEffect(() => {
     // Set the CSS variable for viewport height
@@ -44,21 +44,23 @@ export default function TestPress() {
   const initAudio = async () => {
     try {
       // Create or resume the AudioContext
-      if (!audioContext || audioContext.state === "closed") {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      } else if (audioContext.state === "suspended") {
-        await audioContext.resume();
+      if (!audioContextRef.current || audioContextRef.current.state === "closed") {
+        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      } else if (audioContextRef.current.state === "suspended") {
+        await audioContextRef.current.resume();
       }
 
       // Load audio buffers if not already loaded
       const loadSound = async (color) => {
         const response = await fetch(`/sounds/${colorNotes[color]}.wav`);
+        console.log(`i fired`);
+        console.log(`/sounds/${colorNotes[color]}.wav`);
         if (!response.ok) {
           throw new Error(`Failed to load sound for color: ${color}`);
         }
         const arrayBuffer = await response.arrayBuffer();
-        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        audioBuffers[color] = audioBuffer;
+        const audioBuffer = await audioContextRef.current.decodeAudioData(arrayBuffer);
+        audioBuffersRef.current[color] = audioBuffer;
       };
 
       // Load all sounds
@@ -70,8 +72,8 @@ export default function TestPress() {
         throw new Error("Failed to load start button sound");
       }
       const startArrayBuffer = await startResponse.arrayBuffer();
-      const startBuffer = await audioContext.decodeAudioData(startArrayBuffer);
-      audioBuffers["start"] = startBuffer;
+      const startBuffer = await audioContextRef.current.decodeAudioData(startArrayBuffer);
+      audioBuffersRef.current["start"] = startBuffer;
 
       console.log("Audio initialized successfully");
     } catch (error) {
@@ -83,10 +85,10 @@ export default function TestPress() {
   // Function to play a sound using AudioContext
   const playSound = (color) => {
     try {
-      if (audioBuffers[color]) {
-        const source = audioContext.createBufferSource();
-        source.buffer = audioBuffers[color];
-        source.connect(audioContext.destination);
+      if (audioBuffersRef.current[color]) {
+        const source = audioContextRef.current.createBufferSource();
+        source.buffer = audioBuffersRef.current[color];
+        source.connect(audioContextRef.current.destination);
         source.start(0);
         console.log(`Playing sound for color: ${color}`);
       } else {
@@ -184,7 +186,7 @@ export default function TestPress() {
           </div>
 
           {/* Debug Messages */}
-          <div className="mt-4 p-4 bg-gray-100 rounded-md w-3/4 max-w-md">
+          <div className="mt-4 p-4 bg-gray-100 rounded-md w-3/4 max-w-md text-black">
             <h2 className="text-lg font-bold mb-2">Debug Log:</h2>
             {debugMessages.slice(-5).map((msg, index) => (
               <p key={index} className="text-sm">

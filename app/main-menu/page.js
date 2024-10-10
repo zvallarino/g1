@@ -34,7 +34,10 @@ export default function MainMenu() {
         >
           Campaign
         </button>
-        <button className="w-40 px-4 py-2 bg-red-300 text-2xl text-white rounded">
+        <button
+         className="w-40 px-4 py-2 bg-red-300 text-2xl text-white rounded"
+         onClick={() => router.push('/campaign/testpress')}
+         >
           Settings
         </button>
         <button className="w-40 px-4 py-2 bg-blue-400 text-2xl text-white rounded">
