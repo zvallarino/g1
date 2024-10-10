@@ -26,8 +26,12 @@ export default function TestPress() {
   // State variable to manage the game start
   const [gameStarted, setGameStarted] = useState(false);
 
-  // Set the CSS variable for viewport height
+  // Audio context and buffers
+  let audioContext;
+  const audioBuffers = {};
+
   useEffect(() => {
+    // Set the CSS variable for viewport height
     const setVh = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty("--vh", `${vh}px`);
@@ -37,22 +41,67 @@ export default function TestPress() {
     return () => window.removeEventListener("resize", setVh);
   }, []);
 
-  // Function to play a sound
-  const playSound = (fileName) => {
-    const audio = new Audio(`/sounds/${fileName}`);
-    audio.play();
+  // Function to initialize AudioContext and load audio buffers
+  const initAudio = async () => {
+    // Create or resume the AudioContext
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    } else if (audioContext.state === "suspended") {
+      await audioContext.resume();
+    }
+
+    // Load audio buffers if not already loaded
+    const loadSound = async (color) => {
+      const response = await fetch(`/sounds/${colorNotes[color]}.wav`);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      audioBuffers[color] = audioBuffer;
+    };
+
+    // Load all sounds
+    await Promise.all(colors.map((color) => loadSound(color)));
+
+    // Load start button sound
+    const startResponse = await fetch("/sounds/startbutton.mp3");
+    const startArrayBuffer = await startResponse.arrayBuffer();
+    const startBuffer = await audioContext.decodeAudioData(startArrayBuffer);
+    audioBuffers["start"] = startBuffer;
+  };
+
+  // Function to play a sound using AudioContext
+  const playSound = (color) => {
+    if (audioBuffers[color]) {
+      const source = audioContext.createBufferSource();
+      source.buffer = audioBuffers[color];
+      source.connect(audioContext.destination);
+      source.start(0);
+    }
   };
 
   // Handle user input
-  const handleClick = (color) => {
+  const handlePress = (color) => {
     // Play the associated sound
-    playSound(`${colorNotes[color]}.wav`);
+    playSound(color);
 
     // Flash the clicked color
     setClickedColor(color);
-    setTimeout(() => {
-      setClickedColor(null);
-    }, 200);
+  };
+
+  const handleRelease = () => {
+    // Reset the clicked color
+    setClickedColor(null);
+  };
+
+  // Handle start button click
+  const handleStartClick = async () => {
+    // Initialize AudioContext and load sounds
+    await initAudio();
+
+    // Play the start button sound
+    playSound("start");
+
+    // Proceed immediately
+    setGameStarted(true);
   };
 
   // Determine the className of each color box
@@ -64,17 +113,6 @@ export default function TestPress() {
       classes += " opacity-50";
     }
     return classes;
-  };
-
-  // Handle start button click
-  const handleStartClick = () => {
-    // Play the start button sound
-    playSound("startbutton.mp3");
-
-    // Wait for 1 second to let the sound play fully
-    setTimeout(() => {
-      setGameStarted(true);
-    }, 1000); // Adjust the delay as per the length of your audio
   };
 
   return (
@@ -113,7 +151,8 @@ export default function TestPress() {
               {colors.map((color) => (
                 <div
                   key={color}
-                  onClick={() => handleClick(color)}
+                  onTouchStart={() => handlePress(color)}
+                  onTouchEnd={handleRelease}
                   className={getClassName(color)}
                 ></div>
               ))}
