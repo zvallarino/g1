@@ -50,11 +50,6 @@
         "answers": ["My gut", "My mind"]
       },
       {
-        "id": 11,
-        "question": "Do you carefully choose your underwear each day?",
-        "answers": ["Yes", "Not really"]
-      },
-      {
         "id": 12,
         "question": "Will you fight dirty to win at anything?",
         "answers": ["Of course", "That's not truly winning"]
@@ -135,11 +130,6 @@
         "answers": ["Lying", "Being lied to"]
       },
       {
-        "id": 28,
-        "question": "Have you ever looked up dirty words for kicks?",
-        "answers": ["You got me", "Nope"]
-      },
-      {
         "id": 29,
         "question": "Your lover is cheating on you. Do you...?",
         "answers": ["Break up with them", "Make them end it"]
@@ -148,11 +138,6 @@
         "id": 30,
         "question": "Could you show everything in your inbox to your lover?",
         "answers": ["Of course!", "Eh...I don't think so"]
-      },
-      {
-        "id": 31,
-        "question": "Do you have to carefully choose which underwear to wear each day?",
-        "answers": ["Yes", "Not really"]
       },
       {
         "id": 32,
@@ -165,19 +150,9 @@
         "answers": ["The hospital", "The shower room"]
       },
       {
-        "id": 34,
-        "question": "What are your thoughts on underpants?",
-        "answers": ["You wear it... Under your pants", "It can go anywhere"]
-      },
-      {
         "id": 35,
         "question": "If you were suddenly rich, would you tell your lover?",
         "answers": ["Yes, of course", "No, it's all mine"]
-      },
-      {
-        "id": 36,
-        "question": "Which looks better on men?",
-        "answers": ["Briefs", "Boxers"]
       },
       {
         "id": 37,
@@ -193,5 +168,55 @@
         "id": 39,
         "question": "Has being embarrassed ever turned you on?",
         "answers": ["...Yes", "No!"]
+      },
+      {
+        "id": 40,
+        "question": "Would you rather have a detailed plan or go with the flow on a spontaneous date?",
+        "answers": ["Plan it out", "Spontaneity rules"]
+      },
+      {
+        "id": 41,
+        "question": "How do you feel about discussing 'safe fun' with a new partner?",
+        "answers": ["Open and honest", "Keep it mysterious"]
+      },
+      {
+        "id": 42,
+        "question": "Is carrying protection a sign of responsibility or over-preparation?",
+        "answers": ["Responsible and smart", "A bit much"]
+      },
+      {
+        "id": 43,
+        "question": "Would you prefer a partner who’s experienced or one who's new to the dating scene?",
+        "answers": ["Experienced is intriguing", "Newbies are adorable"]
+      },
+      {
+        "id": 44,
+        "question": "What's more appealing: a spontaneous adventure or a safe night in?",
+        "answers": ["Adventure awaits", "Cozy and safe"]
+      },
+      {
+        "id": 45,
+        "question": "Do you think talking about past relationships is helpful or unnecessary?",
+        "answers": ["Helpful insights", "Let’s focus on us"]
+      },
+      {
+        "id": 46,
+        "question": "How important is it for you to know your partner's health habits?",
+        "answers": ["Very important", "Not a big deal"]
+      },
+      {
+        "id": 47,
+        "question": "Would you get matching tattoos with someone you're dating?",
+        "answers": ["Absolutely!", "Maybe not"]
+      },
+      {
+        "id": 48,
+        "question": "Is it romantic or risky to share secrets early in a relationship?",
+        "answers": ["Romantic gesture", "Better to wait"]
+      },
+      {
+        "id": 49,
+        "question": "Do you prefer to take things slow or dive right into a relationship?",
+        "answers": ["Slow and steady", "Dive in headfirst"]
       }
     ]
