@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function TestPlay() {
   const colors = ["red", "yellow", "blue", "green"];
@@ -14,10 +14,10 @@ export default function TestPlay() {
 
   // Assign notes to each color
   const colorNotes = {
-    red: "C4",
-    yellow: "E4",
-    blue: "G4",
-    green: "C5",
+    red: "C4.wav",
+    yellow: "E4.wav",
+    blue: "G4.wav",
+    green: "C5.wav",
   };
 
   // State variables
@@ -26,6 +26,10 @@ export default function TestPlay() {
 
   // State variable to manage the game start
   const [gameStarted, setGameStarted] = useState(false);
+
+  // Audio context and buffers using useRef to persist across renders
+  const audioContextRef = useRef(null);
+  const audioBuffersRef = useRef({});
 
   // Set the CSS variable for viewport height
   useEffect(() => {
@@ -36,6 +40,49 @@ export default function TestPlay() {
     setVh();
     window.addEventListener("resize", setVh);
     return () => window.removeEventListener("resize", setVh);
+  }, []);
+
+  // Initialize audio context and load audio buffers when component mounts
+  useEffect(() => {
+    const initAudio = async () => {
+      try {
+        // Create or resume the AudioContext
+        if (!audioContextRef.current || audioContextRef.current.state === "closed") {
+          audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        } else if (audioContextRef.current.state === "suspended") {
+          await audioContextRef.current.resume();
+        }
+
+        // Load audio buffers if not already loaded
+        const loadSound = async (color) => {
+          const response = await fetch(`/sounds/${colorNotes[color]}`);
+          if (!response.ok) {
+            throw new Error(`Failed to load sound for color: ${color}`);
+          }
+          const arrayBuffer = await response.arrayBuffer();
+          const audioBuffer = await audioContextRef.current.decodeAudioData(arrayBuffer);
+          audioBuffersRef.current[color] = audioBuffer;
+        };
+
+        // Load all color sounds
+        await Promise.all(colors.map((color) => loadSound(color)));
+
+        // Load start button sound
+        const startResponse = await fetch("/sounds/startbutton.mp3");
+        if (!startResponse.ok) {
+          throw new Error("Failed to load start button sound");
+        }
+        const startArrayBuffer = await startResponse.arrayBuffer();
+        const startBuffer = await audioContextRef.current.decodeAudioData(startArrayBuffer);
+        audioBuffersRef.current["start"] = startBuffer;
+
+        console.log("Audio initialized successfully");
+      } catch (error) {
+        console.error("Error initializing audio:", error);
+      }
+    };
+
+    initAudio();
   }, []);
 
   // Generate the random sequence when the game starts
@@ -62,10 +109,21 @@ export default function TestPlay() {
     console.log("Random sequence:", randomSequence);
   };
 
-  // Function to play a sound
-  const playSound = (fileName) => {
-    const audio = new Audio(`/sounds/${fileName}`);
-    audio.play();
+  // Function to play a sound using AudioContext
+  const playSound = (soundKey) => {
+    try {
+      if (audioBuffersRef.current[soundKey]) {
+        const source = audioContextRef.current.createBufferSource();
+        source.buffer = audioBuffersRef.current[soundKey];
+        source.connect(audioContextRef.current.destination);
+        source.start(0);
+        console.log(`Playing sound: ${soundKey}`);
+      } else {
+        console.warn(`Audio buffer not found for sound: ${soundKey}`);
+      }
+    } catch (error) {
+      console.error(`Error playing sound: ${soundKey}`, error);
+    }
   };
 
   // Function to play the sequence with added delay
@@ -77,7 +135,7 @@ export default function TestPlay() {
       setFlashColor(color);
 
       // Play the associated sound
-      playSound(`${colorNotes[color]}.wav`);
+      playSound(color);
 
       await new Promise((resolve) => setTimeout(resolve, 500)); // Show the color for 500ms
       setFlashColor(null);
@@ -107,12 +165,10 @@ export default function TestPlay() {
   // Handle start button click
   const handleStartClick = () => {
     // Play the start button sound
-    playSound("startbutton.mp3");
+    playSound("start");
 
-    // Wait for 1 second to let the sound play fully
-    setTimeout(() => {
-      setGameStarted(true);
-    }, 1000); // Adjust the delay as per the length of your audio
+    // Start the game immediately
+    setGameStarted(true);
   };
 
   return (
